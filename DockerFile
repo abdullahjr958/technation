@@ -1,28 +1,28 @@
-# Stage 1: Build the application using Maven
-FROM maven:3.9.5-eclipse-temurin-17 AS builder
+# Stage 1: Build with Maven using Java 24
+FROM eclipse-temurin:24-jdk AS builder
 
 WORKDIR /app
 
-# Copy pom.xml and download dependencies first (to use Docker cache)
+# Install Maven manually
+RUN apt-get update && \
+    apt-get install -y maven && \
+    mvn -version
+
+# Copy pom and src
 COPY pom.xml .
 RUN mvn dependency:go-offline
-
-# Copy the rest of the source code
 COPY src ./src
 
-# Build the Spring Boot app
+# Build the application
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run the built JAR
-FROM eclipse-temurin:17-jdk
+# Stage 2: Run the app
+FROM eclipse-temurin:24-jdk
 
 WORKDIR /app
 
-# Copy the jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Expose port 8080
 EXPOSE 8080
 
-# Run the jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
