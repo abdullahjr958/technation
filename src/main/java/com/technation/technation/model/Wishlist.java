@@ -18,7 +18,7 @@ public class Wishlist {
     private String sessionId;
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", unique = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
 

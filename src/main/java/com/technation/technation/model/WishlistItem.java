@@ -14,11 +14,11 @@ public class WishlistItem {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "wishlist_id", nullable = false)
+    @JoinColumn(name = "wishlist_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Wishlist wishlist;
 
     @Column(name = "added_at")

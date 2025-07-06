@@ -12,7 +12,7 @@ public class SpecsValue {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Product product;
 
     @ManyToOne

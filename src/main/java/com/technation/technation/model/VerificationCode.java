@@ -14,7 +14,7 @@ public class VerificationCode {
     private LocalDateTime expiresAt;
 
     @OneToOne
-    @JoinColumn(name = "unverified_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "unverified_user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private UnverifiedUser unverifiedUser;
 
     @PrePersist

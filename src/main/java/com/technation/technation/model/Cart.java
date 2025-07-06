@@ -15,7 +15,7 @@ public class Cart {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
     @Column(name = "session_id")
     private String sessionId;

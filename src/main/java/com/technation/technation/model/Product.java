@@ -21,11 +21,11 @@ public class Product {
     private String imageURL;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brand_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Brand brand;
 
     //Mappings

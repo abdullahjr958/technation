@@ -14,7 +14,7 @@ public class SpecsLabel {
     private String label;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Category category;
 
     @OneToMany(mappedBy = "label", cascade = CascadeType.ALL)
