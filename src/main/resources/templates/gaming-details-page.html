@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Custom CSS & JS -->
+  <link rel="stylesheet" th:href="@{/css/style2.css}">
+  <script th:src="@{/js/include2.js}"></script>
+
+  <!-- Alert Box Files -->
+  <link rel="stylesheet" th:href="@{/css/alert.css}" />
+  <script th:src="@{/js/alert.js}"></script>
+
+  <title> Product Details | TechNation </title>
+</head>
+
+<body class="flex flex-col min-h-screen bg-dark-gradient">
+<div id="root" class="flex flex-col flex-grow">
+
+  <!-- Alert Boxes -->
+  <div th:replace="fragments/alerts :: alerts"></div>
+
+  <!-- Inject Navbar -->
+  <div th:replace="~{fragments/gaming-navbar :: gaming-navbar}"></div>
+
+
+  <main class="flex-grow">
+
+    <!-- Container hy jismy images, descriptions and purchase box hy -->
+    <div class="max-w-screen-xl mx-auto px-2 py-6 grid grid-cols-1 md:grid-cols-12 gap-8">
+
+
+      <!-- Yeah Left wala part hy or yeah choti screens pr top pr hoga -->
+      <!-- Left: Product Images -->
+      <div class="md:col-span-4 relative">
+        <div id="stickyImage" class="sticky top-6 transition-all duration-300 z-10">
+          <div class="flex items-start gap-4 relative">
+
+
+            <!-- Yeah us bari pictures k thumnails hy jin pr click krky bari pictures change krskty hy. JavaScript me coding hoyi wi iski to chairny ki zarorat nhi hy -->
+            <!-- Iski jo bari picture hy wo loc 108 pr named as static image -->
+            <!-- Thumbnails (Left Side) -->
+            <div class="hidden lg:flex flex-col gap-2 w-20 flex-shrink-0">
+              <div th:each="image : ${carousalImages}">
+                <img th:src="@{${image.imageURL}}"
+                     class="w-16 h-20 object-cover rounded cursor-pointer"
+                     onclick="changeImage(this)">
+              </div>
+            </div>
+
+
+            <!-- Yeah image carousel ka container hy -->
+
+            <!-- Main Image / Carousel -->
+            <div class="flex-grow min-w-0 pl-0 lg:pl-0">
+              <!-- Carousel (small screens only) -->
+              <div class="lg:hidden relative">
+                <div class="carousel overflow-hidden relative w-full">
+
+                  <!-- Yaha pr carousel ki images lagy gi. Same pictures as given in thumnails and static image so no extra work -->
+                  <div th:each="image : ${carousalImages}"
+                       class="carousel-track flex transition-transform duration-500"
+                       id="carouselTrack">
+                    <img th:src="@{${image.imageURL}}"
+                         class="min-w-full h-96 lg:h-72 object-contain rounded">
+                  </div>
+
+                  <!-- Yeah dots hy jo carousel k neechy display hogy on smaller displays. <span class="w-2 h-2 bg-gray-400 rounded-full" id="dot0"></span> Is line ko add krty jao dots ko brhany k liye -->
+                  <div class="flex justify-center mt-4 gap-2">
+                    <span class="w-2 h-2 bg-gray-400 rounded-full" id="dot0"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full" id="dot1"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full" id="dot2"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full" id="dot3"></span>
+                  </div>
+
+                </div>
+
+                <!-- Yeah carousel k next or previous buttons hy -->
+                <div class="absolute inset-0 flex justify-between items-center px-2">
+                  <button onclick="prevSlide()"
+                          class="text-5xl text-gray-600 hover:text-blue-600 rounded-md">‹</button>
+                  <button onclick="nextSlide()"
+                          class="text-5xl text-gray-600 hover:text-blue-600 rounded-md">›</button>
+                </div>
+              </div>
+
+              <!-- Picture jo bari screens pr display hogi or choti screen pr disappear -->
+              <!-- Static Image (large screens) -->
+              <img id="mainImage" th:src="@{${product.imageURL}}" alt="Main product"
+                   class="hidden lg:block w-full h-auto object-contain" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Right: Info + Purchase section with reversed order on lg -->
+      <div class="md:col-span-8">
+        <div class="flex flex-col md:flex-row-reverse md:gap-6">
+
+          <!-- Purchase Box -->
+          <div class="w-full max-w-sm mx-auto bg-dark-gradient my-3 md:my-0 md:mx-0 lg:max-w-none h-100 md:flex-[3_0_0%] shadow-md rounded-lg p-4 text-sm text-gray-800"
+               style="border: 0.5px solid rgba(0, 255, 153, 0.3)">
+            <p th:text="'$' + ${product.price}" class="text-xl font-serif font-bold text-green"><sup
+                    class="text-sm align-top">00</sup></p>
+            <p class="text-green-600 font-semibold text-sm mt-2">In Stock</p>
+            <form th:action="@{'/add-to-cart/' + ${product.id}}" id="addToCartForm">
+            <label class="block mt-3 mb-1 text-xs font-medium text-cyan">Quantity:</label>
+            <input name="quantity" type="number" class="w-full px-2 py-1 text-sm text-green"
+                   style="border: 0.5px solid rgba(0, 255, 153, 0.2)" placeholder="Enter Quantity" min="1" max="10" value="1" />
+
+            <button type="submit" class="mt-3 w-full py-2 rounded-full gaming-btn-primary">Add to
+              Cart</button>
+            </form>
+
+            <form th:action="@{'/add-to-wishlist/' + ${product.id}}"
+                  th:attr="data-product-id=${product.id}" id="addToWishlistForm">
+            <button type="submit" class="mt-3 w-full py-2 rounded-full gaming-btn-primary">Add to
+              Wishlist</button>
+            </form>
+
+            <div class="mt-4 text-xs text-gray-600 space-y-1">
+              <p><span class="text-cyan">Ships from:</span> <span
+                      class="font-medium text-green">TechNation.com</span>
+              </p>
+              <p><span class="text-cyan">Returns:</span> <span class="text-green underline">30-day
+                                        refund/replacement</span></p>
+              <p><span class="text-cyan">Payment:</span> <span class="text-green underline">Secure
+                                        transaction</span>
+              </p>
+            </div>
+
+            <div class="mt-4 space-y-2">
+              <button class="text-xs rounded py-1 w-full gaming-btn-primary">Trade-In and
+                save</button>
+              <label class="flex items-center gap-2 text-xs text-green">
+                <input type="checkbox" class="accent-yellow-400" />
+                Add a gift receipt for easy returns
+              </label>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="w-full md:flex-[7_0_0%] text-base z-0 relative">
+            <h1 th:text="${product.name}" class="text-2xl font-semibold mb-2 text-cyan"></h1>
+            <p th:text="'$' + ${product.price}" class="text-3xl text-green font-serif pt-2"><sup
+                    class="text-base align-top">00</sup>
+            </p>
+
+            <!-- Product Specifications -->
+            <div class="p-0 mt-5">
+              <h2 class="text-2xl font-semibold mb-4 text-cyan">Specifications</h2>
+              <div class="overflow-x-auto rounded-lg shadow-inner">
+                <table
+                        class="min-w-full bg-gradient-to-r from-[var(--deep-navy)] to-[var(--dark-bg)] text-left text-sm text-cyan"
+                        style="border: 0.5px solid rgba(0, 255, 153, 0.3)">
+                  <tbody>
+                  <tr th:each="value : ${specsValuesList}"
+                      class="gaming-headings border-cyan/10">
+                    <th th:text="${value.label}" class="px-4 py-3 font-medium text-cyan/90">
+                    </th>
+                    <td th:text="${value.value}" class="px-4 py-3 text-cyan/70"></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Product Description -->
+            <h2 class="mt-2 text-2xl font-semibold text-cyan">Product Description:</h2>
+            <ul class="list-disc ml-6 mt-1 text-green space-y-1">
+              <li th:each=" point : ${descriptionPoints}" th:text="${point.trim()}"></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Yaha pr Specifications Images lagy gi rectangular wali -->
+    <!-- Specifications Images -->
+    <section th:if="${specsImages != null and !#lists.isEmpty(specsImages)}" id="fbtSection"
+             class="bg-dark-gradient py-10 px-4" style="border-top: 0.5px solid rgba(0, 255, 153, 0.1)">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-wrap justify-center gap-6">
+          <div>
+            <img th:each="image : ${specsImages}" th:src="@{${image.imageURL}}" alt="Specs Image" class="max-w-full h-auto object-contain" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Inject Footer -->
+  <div th:replace="~{fragments/gaming-footer :: gaming-footer}"></div>
+</div>
+
+</body>
+<script src="https://kit.fontawesome.com/f4157f3a9f.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://unpkg.com/heroicons@2.0.16/dist/24/outline.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+<script src="tailwind.config.js"></script>
+
+
+<!-- JS for Forms -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const addToCartForm = document.querySelector('form[action^="/add-to-cart/"]');
+
+      if (addToCartForm) {
+          addToCartForm.addEventListener('submit', function (event) {
+              event.preventDefault(); // prevent full page reload
+
+              const productId = addToCartForm.getAttribute('action').split('/').pop();
+              const quantity = addToCartForm.querySelector('[name="quantity"]').value;
+
+              fetch(`/add-to-cart/${productId}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ quantity: quantity })
+              })
+                  .then(response => {
+                      if (!response.ok) throw new Error('Something went wrong');
+                      return response.json();
+                  })
+                  .then(data => {
+                      showAlert('success', '✔️ Item Added to Cart successfully');
+                  })
+                  .catch(error => {
+                      showAlert('error', '❌ Failed to add to cart');
+                  });
+          });
+      }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+      const addToWishlistForm = document.querySelector('form[action^="/add-to-wishlist/"]');
+      const productId = addToWishlistForm.getAttribute("data-product-id");
+
+      if (addToWishlistForm) {
+          addToWishlistForm.addEventListener('submit', function (event) {
+              event.preventDefault();
+
+              fetch('/add-to-wishlist/' + productId, {
+                  method: 'POST'
+              })
+                  .then(response => {
+                      if (!response.ok) throw new Error('Something went wrong');
+                      return response.json();
+                  })
+                  .then(response => {
+                      showAlert('success', '✔️ Added to Wishlist Successfully.');
+                  })
+                  .catch(error => {
+                      showAlert('error', '❌ Failed to add to Wishlist.');
+                  });
+          });
+      }
+  });
+
+</script>
+
+<!-- JS for Page Functionalty -->
+<script>
+  const stickyImage = document.getElementById("stickyImage");
+  const fbtSection = document.getElementById("fbtSection");
+
+  function checkSticky() {
+      const stickyRect = stickyImage.getBoundingClientRect();
+      const fbtRect = fbtSection.getBoundingClientRect();
+
+      // If bottom of sticky image is about to overlap top of FBT
+      if (stickyRect.bottom + 20 >= fbtRect.top) {
+          stickyImage.classList.remove("sticky", "top-6");
+      } else {
+          stickyImage.classList.add("sticky", "top-6");
+      }
+  }
+
+  window.addEventListener("scroll", checkSticky);
+  window.addEventListener("resize", checkSticky);
+</script>
+
+<script>
+  let currentSlide = 0;
+  const totalSlides = 3; // change this if you add more images
+
+  function updateDots() {
+      for (let i = 0; i < totalSlides; i++) {
+          const dot = document.getElementById('dot' + i);
+          dot.classList.remove('bg-blue-500');
+          dot.classList.add('bg-gray-400');
+      }
+      const activeDot = document.getElementById('dot' + currentSlide);
+      activeDot.classList.remove('bg-gray-400');
+      activeDot.classList.add('bg-blue-500');
+  }
+
+  function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      document.getElementById('carouselTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+      updateDots();
+  }
+
+  function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      document.getElementById('carouselTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+      updateDots();
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', updateDots);
+</script>
+
+
+</html>

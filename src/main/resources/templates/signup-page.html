@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> TechNation | Sign up </title>
+  <meta name="description"
+        content="Join TechNation for a premium shopping experience with curated products and exclusive offers." />
+  <meta name="author" content="TechNation" />
+
+  <meta property="og:title" content="TechNation - Premium E-Commerce Experience" />
+  <meta property="og:description"
+        content="Join TechNation for a premium shopping experience with curated products and exclusive offers." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lovable_dev" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <link rel="stylesheet" th:href="@{/css/alert.css}" />
+  <script th:src="@{/js/alert.js}"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Merriweather:wght@300;400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    navy: {
+                        DEFAULT: '#18314F',
+                        light: '#405D7D',
+                        dark: '#0E1C2C'
+                    },
+                    charcoal: {
+                        DEFAULT: '#333333',
+                        light: '#555555',
+                        dark: '#222222'
+                    },
+                    royal: {
+                        DEFAULT: '#1E56A0',
+                        light: '#3A7BD5',
+                        dark: '#0E3B7D'
+                    },
+                    teal: {
+                        DEFAULT: '#20639B',
+                        light: '#3D89C9',
+                        dark: '#174F7D'
+                    }
+                },
+                fontFamily: {
+                    'playfair': ['"Playfair Display"', 'serif'],
+                    'roboto': ['Roboto', 'sans-serif'],
+                    'merriweather': ['Merriweather', 'serif'],
+                    'lato': ['Lato', 'sans-serif']
+                }
+            }
+        }
+    }
+  </script>
+
+  <!-- Custom CSS -->
+  <style>
+    .animate-fade-in {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease-in-out;
+        color: #333333;
+    }
+
+    .input-field:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(30, 86, 160, 0.3);
+        border-color: #1E56A0;
+    }
+
+    .input-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #222222;
+        margin-bottom: 6px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px 24px;
+        background-image: linear-gradient(to right, #18314F, #405D7D);
+        color: white;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+        transform: translateY(0);
+    }
+
+    .btn-primary:hover {
+        background-image: linear-gradient(to right, #0E1C2C, #18314F);
+        box-shadow: 0 4px 12px rgba(24, 49, 79, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .error-message {
+        color: #e53e3e;
+        font-size: 14px;
+        margin-top: 4px;
+        display: none;
+    }
+
+    .error .error-message {
+        display: block;
+    }
+
+    .error .input-field {
+        border-color: #e53e3e;
+    }
+
+    .error .input-field:focus {
+        box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.3);
+    }
+
+    .mess{
+        font-size: small;
+        color: red;
+    }
+
+    .blurred{
+        filter: blur(5px);
+        transition: filter 0.3s ease;
+    }
+  </style>
+
+  <!--Modal Box CSS-->
+  <style>
+    .font-playfair {
+        font-family: 'Playfair Display', serif;
+    }
+
+    .font-roboto {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .modal-backdrop {
+        backdrop-filter: blur(8px);
+        background: rgba(215, 222, 231, 0.75);
+    }
+
+    .modal-enter {
+        animation: modalEnter 0.3s ease-out;
+    }
+
+    @keyframes modalEnter {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .otp-input:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: #0891b2;
+    }
+
+        .verify-enabled {
+            background: linear-gradient(135deg, #16619e 0%, #0b2d5a 100%);
+            transition: all 0.3s ease;
+        }
+
+        .verify-enabled:hover {
+            background: linear-gradient(135deg, #1e40af 0%, #0e7490 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.2);
+        }
+
+        .verify-disabled{
+            background: linear-gradient(100deg, #c4c6c6, #4b4b4b);
+            color: #252525;
+        }
+
+        .verify-disabled:hover{
+            cursor: not-allowed;
+        }
+
+    .resend-link {
+        position: relative;
+        transition: color 0.3s ease;
+    }
+
+        .resend-enabled::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(90deg, #0891b2, #1e3a8a);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .resend-enabled:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+            cursor: pointer;
+        }
+
+        .resend-disabled:hover {
+            color: gray;
+            cursor: not-allowed;
+        }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div th:replace="fragments/alerts :: alerts"></div>
+
+<!-- Div for Blurring-->
+  <div id="mainContent" class="min-h-screen flex flex-col md:flex-row bg-gray-50">
+    <!-- Left Side - Branding -->
+    <div
+            class="w-full md:w-5/12 lg:w-4/12 bg-gradient-to-br from-navy to-navy-dark text-white p-8 md:p-12 flex flex-col justify-between animate-fade-in">
+      <div>
+        <h1 class="font-playfair text-3xl md:text-4xl font-bold mb-4">TechNation</h1>
+        <div class="h-1 w-16 bg-white mb-8"></div>
+        <p class="font-roboto text-lg mb-6 max-w-md">Join our exclusive community of discerning shoppers and
+          discover premium products curated just for you.</p>
+      </div>
+
+      <div class="hidden md:block">
+        <p class="font-roboto text-sm opacity-80">© 2025 TechNation. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Form -->
+    <div class="w-full md:w-7/12 lg:w-8/12 p-8 md:p-12 lg:p-16 xl:p-20 flex items-center animate-fade-in"
+         style="animation-delay: 0.2s;">
+      <div class="w-full max-w-lg mx-auto">
+        <div class="mb-10">
+          <h2 class="font-playfair text-2xl md:text-3xl text-charcoal-dark font-semibold mb-2">Create Your
+            Account</h2>
+          <p class="font-roboto text-charcoal-light">Please fill in your details to get started</p>
+        </div>
+
+        <form id="signupForm" class="space-y-5">
+
+          <!-- Full Name Input -->
+          <div class="form-group">
+            <label for="name" class="input-label">Full Name</label>
+            <input type="text" id="name" class="input-field" />
+            <p id="name-message" class="mess"></p>
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-group">
+            <label for="email" class="input-label">Email Address</label>
+            <input type="email" id="email" class="input-field"/>
+            <p id="email-message" class="mess"></p>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group">
+            <label for="password" class="input-label">Password</label>
+            <input type="password" id="password" class="input-field"/>
+            <p id="password-message" class="mess"></p>
+          </div>
+
+          <!-- Address Input -->
+          <div class="form-group">
+            <label for="address" class="input-label">Address</label>
+            <textarea id="address" rows="2" class="input-field resize-none"></textarea>
+            <p id="address-message" class="mess"></p>
+          </div>
+
+          <!-- Phone Input -->
+          <div class="form-group">
+            <label for="phone" class="input-label">Phone Number</label>
+            <input type="tel" id="phone" class="input-field"/>
+            <p id="phone-message" class="mess"></p>
+          </div>
+
+          <!-- Sign Up Button -->
+          <div class="pt-4">
+            <button type="submit" id="signup-btn" class="btn-primary relative">
+              <span id="buttonText">Create Account</span>
+              <!-- Spinner -->
+              <span id="buttonSpinner" class="absolute inset-0 flex items-center justify-center hidden">
+                <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
+                  <circle class="opacity-100" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"></path>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <div class="text-center mt-6">
+            <p class="font-roboto text-charcoal-light text-sm">
+              Already have an account? <a th:href="@{/login}"
+                                          class="text-royal font-medium hover:underline">Sign In</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer for mobile -->
+    <div class="md:hidden p-6 text-center">
+      <p class="font-roboto text-sm text-charcoal-light">© 2025 TechNation. All rights reserved.</p>
+    </div>
+  </div>
+
+
+<!-- Modal Backdrop -->
+<div id="successModal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden">
+
+  <!-- Modal Container -->
+  <div class="modal-enter bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden relative">
+
+    <button id="modalClose-btn" type="button" class="absolute top-3 right-3 z-50 text-white hover:text-gray-300 transition-colors"
+            aria-label="Close" onclick="closeModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+           stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 px-8 py-6">
+      <div class="text-center">
+        <div
+                class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+            </path>
+          </svg>
+        </div>
+        <h2 class="font-playfair text-2xl font-bold text-white mb-2">Verify Your Identity</h2>
+        <p class="font-roboto text-cyan-100 text-sm">Enter the 6-digit code sent to your mobile device</p>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-8 py-8">
+
+      <!-- Email Display -->
+      <div class="text-center mb-6">
+        <p class="font-roboto text-gray-600 text-sm">Code sent to</p>
+        <p id="email-display" class="font-roboto font-semibold text-slate-800 text-lg"></p>
+      </div>
+
+      <!-- Verification Form-->
+      <form id="verificationForm">
+        <!-- OTP Input Field -->
+        <div class="flex justify-center space-x-3 mb-8">
+          <input type="text" style="font-size: xx-large;"
+                 class="otp-input w-72 h-14 text-center text-xl font-bold border-2 border-gray-200 rounded-lg focus:outline-none focus:border-cyan-600 transition-colors duration-200 font-roboto" />
+        </div>
+        <p id="otp-message" class="mess"></p>
+
+        <!-- Timer Display -->
+        <div class="text-center mb-6">
+          <p id="expired-message" class="font-roboto text-gray-500 text-sm">Code expires in <span id="otp-timer"
+                  class="font-semibold text-slate-800">00:00</span></p>
+        </div>
+
+        <!-- Verify Button -->
+        <button type="submit" id="verify-btn"
+                class="verify-enabled w-full py-4 rounded-xl font-roboto font-semibold text-white text-lg shadow-lg mb-6">
+          Verify Code
+        </button>
+      </form>
+
+      <!-- Resend Code Section -->
+      <div class="text-center">
+        <p class="font-roboto text-gray-600 text-sm mb-2">Didn't receive the code?</p>
+        <button id="resend-btn" class="resend-link resend-enabled resend-disabled gray-class font-roboto font-medium text-cyan-600 hover:text-slate-800 text-sm">
+          Resend Code
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="bg-gray-50 px-8 py-4 border-t border-gray-100">
+      <div class="flex items-center justify-center space-x-2">
+        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                clip-rule="evenodd"></path>
+        </svg>
+        <p class="font-roboto text-xs text-gray-500">Your information is secure and encrypted</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+</body>
+
+<!-- Sign Up Form JS -->
+<script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+      const signupForm = document.getElementById('signupForm');
+
+      if (signupForm) {
+          signupForm.addEventListener('submit', function (event) {
+              event.preventDefault();
+              const name = document.getElementById('name').value.trim();
+              const email = document.getElementById('email').value.trim();
+              const password = document.getElementById('password').value;
+              const address = document.getElementById('address').value.trim();
+              const phoneNo = document.getElementById('phone').value.trim();
+
+              const signupButton = document.getElementById('signup-btn');
+              const spinner = document.getElementById('buttonSpinner');
+              const buttonText = document.getElementById('buttonText');
+
+              let isValid = true;
+
+              document.getElementById('name-message').innerText = '';
+              document.getElementById('email-message').innerText = '';
+              document.getElementById('password-message').innerText = '';
+              document.getElementById('address-message').innerText = '';
+              document.getElementById('phone-message').innerText = '';
+
+              if (!name) {
+                  document.getElementById('name-message').innerText = 'Name is required';
+                  isValid = false;
+              }
+              if (!email) {
+                  document.getElementById('email-message').innerText = 'Email is required';
+                  isValid = false;
+              }
+              if (!password) {
+                  document.getElementById('password-message').innerText = 'Password is required';
+                  isValid = false;
+              }
+              else if (password.length < 6) {
+                  document.getElementById('password-message').innerText = 'Password must be at least 6 characters long';
+                  isValid = false;
+              }
+
+              if (!address) {
+                  document.getElementById('address-message').innerText = 'Address is required';
+                  isValid = false;
+              }
+              if (!phoneNo) {
+                  document.getElementById('phone-message').innerText = 'Phone Number is required';
+                  isValid = false;
+              }
+
+              if (isValid) {
+                  signupButton.disabled = true;
+                  spinner.classList.remove('hidden');
+                  buttonText.classList.add('invisible');
+
+                  fetch('/auth/send-otp', {
+                      method: 'POST',
+                      headers: ({
+                          'Content-Type': 'application/json'
+                      }),
+                      body: JSON.stringify({
+                          name: name,
+                          email: email,
+                          password: password,
+                          address: address,
+                          phoneNo: phoneNo
+                      })
+                  })
+                      .then(response => {
+                          if (!response.ok) {
+                              return response.json().then(err => {
+                                  throw new Error(err.message);
+                              });
+                          }
+                          return response.json();
+                      })
+                      .then(data => {
+                          signupButton.disabled = false;
+                          spinner.classList.add('hidden');
+                          buttonText.classList.remove('invisible');
+                          const email = data.email;
+                          showModal(email);
+                      })
+                      .catch(error => {
+                          showAlert('error', error.message);
+                      });
+              }
+          });
+      }
+
+  });
+
+</script>
+
+<!-- Timer JS -->
+<script>
+
+  let otpInterval; // globally store the timer reference
+
+function startOtpTimer(durationInMinutes) {
+    clearInterval(otpInterval);
+
+    const display = document.getElementById('otp-timer');
+    const resendBtn = document.getElementById('resend-btn');
+    let timeLeft = durationInMinutes * 60;
+
+    otpInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+
+        display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        // Enable Resend Button after 1 minute
+        if (timeLeft === (durationInMinutes * 60) - 60) {
+            resendBtn.disabled = false;
+            resendBtn.textContent = 'Resend Code';
+            resendBtn.classList.remove('resend-disabled');
+            resendBtn.classList.add('resend-enabled');
+        }
+
+        // Show resend cooldown only during the first 60 seconds
+if (timeLeft > (durationInMinutes * 60) - 60) {
+    const resendCooldownRemaining = timeLeft - ((durationInMinutes * 60) - 60);
+    const cooldownSeconds = resendCooldownRemaining % 60;
+    resendBtn.disabled = true;
+    resendBtn.textContent = `Resend in 00:${String(cooldownSeconds).padStart(2, '0')}`;
+    resendBtn.classList.remove('resend-enabled');
+    resendBtn.classList.add('resend-disabled');
+}
+
+
+        // Expire after total countdown
+        if (--timeLeft < 0) {
+            clearInterval(otpInterval);
+            display.textContent = "Code Expired";
+            display.style.color = 'red';
+
+            document.getElementById('verify-btn').disabled = true;
+            document.getElementById('verify-btn').classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }, 1000);
+}
+
+
+function showModal(email) {
+    document.getElementById('email-display').innerText = email;
+    document.getElementById('successModal').classList.remove('hidden');
+    document.getElementById('mainContent').classList.add('blurred');
+
+    const resendBtn = document.getElementById('resend-btn');
+
+    // Set initial state of resend button
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Resend in 15:00';
+    resendBtn.classList.remove('resend-enabled');
+    resendBtn.classList.add('resend-disabled');
+
+    // Optional: Reset display timer color if reused
+    const display = document.getElementById('otp-timer');
+    display.style.color = '';
+
+    // Remove existing event listener (if you’re seeing multiple requests)
+    const cloned = resendBtn.cloneNode(true);
+    resendBtn.parentNode.replaceChild(cloned, resendBtn);
+
+    // Add fresh event listener
+    cloned.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email-display').innerText;
+
+        fetch('auth/resend-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            showAlert('success', data.message);
+            startOtpTimer(15); // Restart the full 15-minute timer
+        })
+        .catch(error => {
+            showAlert('error', error.message);
+        });
+    });
+
+    // Start initial timer
+    startOtpTimer(15);
+}
+
+
+
+  function closeModal() {
+      document.getElementById('successModal').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('blurred');
+      clearInterval(otpInterval);
+  }
+
+</script>
+
+<!-- Verification Form JS -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const verificationForm = document.getElementById('verificationForm');
+
+      document.getElementById('modalClose-btn').addEventListener('click', function(){
+      const email = document.getElementById('email-display').innerText;
+            fetch(`/remove-unverified-user`, {
+                method : 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            });
+        });
+
+      if (verificationForm) {
+          verificationForm.addEventListener('submit', function (event) {
+              event.preventDefault();
+
+              document.getElementById('otp-message').innerText = '';
+              const otp = document.querySelector('.otp-input').value.trim();
+              const email = document.getElementById('email-display').innerText;
+
+              if (!otp) {
+                  document.getElementById('otp-message').innerText = 'OTP is Required';
+              }
+              else if(otp.length > 6){
+                  document.getElementById('otp-message').innerText = 'Please Enter a Valid OTP';
+              }
+              else {
+
+                  fetch('/auth/verify-otp', {
+                      method: 'POST',
+                      headers: ({
+                          'Content-Type': 'application/json'
+                      }),
+                      body: JSON.stringify({
+                          otp: otp,
+                          email: email
+                      })
+                  })
+                      .then(response => {
+                          if (!response.ok) {
+                              return response.json().then(err => {
+                                  throw new Error(err.message);
+                              });
+                          }
+                          return response.json();
+                      })
+                      .then(data => {
+                          console.log("Response JSON:", data);
+                          closeModal();
+                          window.location.href = data.redirectUrl;
+                      })
+                      .catch(error => {
+                          closeModal();
+                          showAlert('error', error.message);
+                      });
+
+              }
+          });
+      }
+  });
+
+</script>
+
+</html>

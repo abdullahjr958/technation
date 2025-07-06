@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Audiowide&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+            rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Custom CSS & JS -->
+    <link rel="stylesheet" th:href="@{/css/style2.css}">
+    <script th:src="@{/js/include2.js}"></script>
+
+    <title> Gaming Home | TechNation </title>
+
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-dark-gradient">
+
+<!-- Navbar Injection -->
+<div th:replace="~{fragments/gaming-navbar :: gaming-navbar}"></div>
+
+
+<!-- Carousal -->
+<div id="carouselExampleRide" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner">
+        <div class="carousel-img">
+            <div class="carousel-item active">
+                <img
+                        src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/01a576d9-f2d9-453d-b828-f7827a4ecb72.__CR0,0,1464,600_PT0_SX1464_V1___.jpg"
+                        alt="Web Banner Launch" class="responsive-banner">
+            </div>
+            <div class="carousel-item">
+                <img
+                        src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/39c3aaa7-b7e2-47dd-9508-b058f7371af2.__CR0,0,1464,600_PT0_SX1464_V1___.png"
+                        class="responsive-banner" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img
+                        src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/9e04d3df-74b8-4373-a208-be100e6bb8ff.__CR0,0,1464,600_PT0_SX1464_V1___.png"
+                        class="responsive-banner" alt="...">
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+<!-- Best Selling Products Cards -->
+<div class="max-w-screen-2xl md:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
+    <h2 class="text-3xl text-center text-cyan mt-10 pb-2 gaming-headings">Best Selling</h2>
+</div>
+
+<div class="max-w-screen-2xl md:max-w-6xl 2xl:max-w-screen-2xl mx-auto py-4">
+
+    <!-- Scrollable Grid with Arrows -->
+    <div class="relative">
+
+        <!-- Scrollable Container -->
+        <div id="scrollContainer" class="overflow-x-auto scroll-smooth hide-scrollbar">
+
+            <div class="flex gap-19 w-max px-3 py-4">
+
+                <!-- Repeat Product Cards (4+ for scrollability) -->
+                <!-- Example card (repeat or loop for real content) -->
+
+                <div th:each="product : ${bestSellingList}" class="bg-dark-gradient rounded-xl shadow-md p-4 w-80 sm:w-100 flex-shrink-0 relative"
+                     style="border: 0.5px solid rgba(0, 255, 153, 0.1); height: 420px;">
+                    <!-- <div class="absolute top-3 left-3 bg-yellow-400 text-xs font-semibold text-black px-2 py-1 rounded">BT Calling</div> -->
+                    <a th:href="@{'gaming/product-details/' + ${product.id}}"><img
+                            th:src="@{${product.imageURL}}"
+                            alt="Product" class="w-full h-52 object-contain mb-3" />
+                        <h3 th:text="${#strings.substring(product.name, 0, 55)} + ' ....'" class="text-cyan gaming-cards">D-Force Smart Watch</h3>
+                        <div class="mt-2">
+                            <span th:text="'$' + ${product.price}" class="font-bold text-lg text-green"></span>
+                        </div>
+                    </a>
+                    <form th:action="@{'/gaming/product-details/' + ${product.id}}" method="get">
+                        <button class="mt-4 w-full py-2 gaming-btn-primary">View Details</button>
+                    </form>
+                </div>
+
+                <!-- Duplicate the card above for more products -->
+            </div>
+        </div>
+
+
+        <!-- Stylish Arrows -->
+        <div id="backBtn">
+            <button
+                    class="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-dark-gradient text-cyan shadow-lg hover:text-blue-600 transition p-3 rounded-full opacity-70"
+                    style="border-bottom: 0.5px solid rgba(0, 240, 255, 1)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+        </div>
+
+        <div id="nextBtn">
+            <button
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-dark-gradient text-cyan shadow-lg hover:text-blue-600 transition p-3 rounded-full opacity-70"
+                    style="border-bottom: 0.5px solid rgba(0, 240, 255, 1)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Best Selling categories -->
+<div class="max-w-screen-xl md:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl text-center text-cyan mb-10 pb-2 gaming-headings">Best Selling Categories</h2>
+</div>
+
+<div class="container-wrapper">
+    <div class="grid-layout">
+
+        <!-- Gaming Laptop Card -->
+        <a th:href="@{/gaming/category/7}" class="card">
+            <img src="https://res.cloudinary.com/dbagnblo5/image/upload/v1751420349/Gaming_Laptop_i6o4a3.jpg"
+                    alt="Gaming Laptop" />
+            <div class="card-overlay">
+                <h2 class="text-white tracking-wide group-hover:text-green-400 transition-colors gaming-categories">GAMING
+                    LAPTOP</h2>
+            </div>
+        </a>
+
+        <!-- PC Components Card -->
+        <a th:href="@{/gaming/category/8}" class="card">
+            <img src="https://res.cloudinary.com/dbagnblo5/image/upload/v1751622695/PC_Components_bkk9yp.jpg"
+                 alt="PC Components" />
+            <div class="card-overlay">
+                <h2 class="text-white tracking-wide group-hover:text-yellow-400 transition-colors gaming-categories">PC COMPONENTS</h2>
+            </div>
+        </a>
+
+        <!-- Gaming Monitor Card -->
+        <a href="#" class="card">
+            <img src="https://res.cloudinary.com/dbagnblo5/image/upload/v1751420349/Gaming_Monitor_ncoyfj.jpg"
+                 alt="Gaming Monitor" />
+            <div class="card-overlay">
+                <h2 class="text-white tracking-wide group-hover:text-yellow-400 transition-colors gaming-categories">GAMING
+                    MONITOR</h2>
+            </div>
+        </a>
+
+        <!-- Gaming Headset Card -->
+        <a href="#" class="card">
+            <img src="https://res.cloudinary.com/dbagnblo5/image/upload/v1751420351/Gaming_Headset_aygjxk.jpg"
+                 alt="Gaming Headset" />
+            <div class="card-overlay">
+                <h2 class="text-white tracking-wide group-hover:text-yellow-400 transition-colors gaming-categories">GAMING
+                    HEADSET</h2>
+            </div>
+        </a>
+
+    </div>
+</div>
+
+
+
+<!-- Blogs section -->
+<section class="bg-dark-gradient py-10 px-4">
+
+    <div class="max-w-screen-xl md:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto">
+        <h2 class="text-3xl text-center text-cyan mb-10 pb-2 gaming-headings">Blogs</h2>
+    </div>
+
+
+
+
+    <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-screen-2xl md:max-w-6xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Post 1 -->
+        <div class="post-card bg-dark-gradient rounded-lg overflow-hidden shadow-md mx-auto"
+             style="border: 0.5px solid rgba(0, 255, 153, 0.2)">
+            <img src="https://t4.ftcdn.net/jpg/06/36/87/81/360_F_636878163_rQrgHTFRgTFxRSEd03YVWadcRYeuqmFh.jpg"
+                 alt="Airdots 500 Alpha" class="w-full">
+            <div class="p-4">
+                <h3 class="text-md mb-2 text-cyan blogs-headings">Introducing The Airdots 500 Alpha</h3>
+                <p class="text-green text-sm">
+                    Dany has raised the bar yet again with the launch of the Airdots 500 Alpha, a set of wireless earbuds that
+                    combines style, performance, and advanced technology...
+                </p>
+            </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="post-card bg-dark-gradient rounded-lg overflow-hidden shadow-md mx-auto"
+             style="border: 0.5px solid rgba(0, 255, 153, 0.2)">
+            <img
+                    src="https://img.freepik.com/premium-photo/electronic-collection-computer-random-access-memory-ram-modules-black-background-toned-blue_486684-2209.jpg"
+                    alt="What is ANC?" class="w-full">
+            <div class="p-4">
+                <h3 class="text-md mb-2 text-cyan blogs-headings">What Is Active Noise Cancellation In Wireless Earbuds?</h3>
+                <p class="text-green text-sm">
+                    In today’s fast-paced world, wireless earbuds have become an essential gadget. Learn how Active Noise
+                    Cancellation (ANC) improves sound quality in noisy environments...
+                </p>
+            </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="post-card bg-dark-gradient rounded-lg overflow-hidden shadow-md mx-auto hidden md:block"
+             style="border: 0.5px solid rgba(0, 255, 153, 0.2)">
+            <img
+                    src="https://www.shutterstock.com/image-vector/circuit-board-technology-background-central-600nw-2259724309.jpg"
+                    alt="Airdots 500 Alpha" class="w-full">
+            <div class="p-4">
+                <h3 class="text-md mb-2 text-cyan blogs-headings">Introducing The Airdots 500 Alpha</h3>
+                <p class="text-green text-sm">
+                    Dany has raised the bar yet again with the launch of the Airdots 500 Alpha, a set of wireless earbuds that
+                    combines style, performance, and advanced technology...
+                </p>
+            </div>
+        </div>
+
+        <!-- Post 4 -->
+        <div class="post-card bg-dark-gradient rounded-lg overflow-hidden shadow-md mx-auto hidden md:block"
+             style="border: 0.5px solid rgba(0, 255, 153, 0.2)">
+            <img src="https://cdn.wccftech.com/wp-content/uploads/2024/11/M4-MacBook-Pro-1456x860.jpg" alt="What is ANC?"
+                 class="w-full">
+            <div class="p-4">
+                <h3 class="text-md mb-2 text-cyan blogs-headings">What Is Active Noise Cancellation In Wireless Earbuds?</h3>
+                <p class="text-green text-sm">
+                    In today’s fast-paced world, wireless earbuds have become an essential gadget. Learn how Active Noise
+                    Cancellation (ANC) improves sound quality in noisy environments...
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</section>
+
+<div th:replace="~{fragments/gaming-footer :: gaming-footer}"></div>
+
+</body>
+<script src="https://kit.fontawesome.com/f4157f3a9f.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://unpkg.com/heroicons@2.0.16/dist/24/outline.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+<style>
+    /* Container Wrapper */
+    .container-wrapper {
+      max-width: 1536px;
+      /* Tailwind's 2xl = 1536px */
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 1rem;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+
+    /* Responsive padding */
+    @media (min-width: 640px) {
+      .container-wrapper {
+        padding-left: 2.75rem;
+        padding-right: 2.75rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .container-wrapper {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+    }
+
+    /* Grid Layout */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 1.5rem;
+      /* 24px */
+    }
+
+    @media (min-width: 640px) {
+      .grid-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .grid-layout {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    /* Card Styles */
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      display: block;
+      width: 100%;
+      max-width: 24rem;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid #03ebfc;
+
+      /* Set a fixed height in all cases */
+      height: 15rem;
+
+      transition: transform 0.5s ease;
+      transform: translateZ(0);
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    /* Responsive Heights */
+    @media (min-width: 640px) {
+      .card {
+        height: 12rem;
+        /* sm:h-48 */
+      }
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        height: 14rem;
+        /* md:h-56 */
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .card {
+        height: 15rem;
+        /* lg:h-60 */
+      }
+    }
+
+    /* Image Styling */
+    .card img {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    /* Overlay Styling */
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 1rem;
+    }
+</style>
+
+<script>
+    const container = document.getElementById('scrollContainer');
+    const backBtnContainer = document.getElementById("backBtn");
+    const nextBtnContainer = document.getElementById("nextBtn");
+
+    const backBtn = backBtnContainer.querySelector('button');
+    const nextBtn = nextBtnContainer.querySelector('button');
+
+    function getCardWidthAndGap() {
+      const card = container.querySelector('.w-80'); // Your card width class
+      if (!card) return { cardWidth: 320, gap: 48 }; // fallback values
+
+      const cardStyles = window.getComputedStyle(card);
+      const cardWidth = card.offsetWidth;
+
+      // gap between flex items — get margin-right from card except last-child
+      // Assuming horizontal gap is margin-right on cards except last card
+      let gap = 0;
+      const cards = container.querySelectorAll('.w-80');
+      if (cards.length > 1) {
+        const firstCardStyle = window.getComputedStyle(cards[0]);
+        const secondCardStyle = window.getComputedStyle(cards[1]);
+        // Calculate gap by difference between second card left and first card right
+        const firstRight = cards[0].getBoundingClientRect().right;
+        const secondLeft = cards[1].getBoundingClientRect().left;
+        gap = secondLeft - firstRight;
+      } else {
+        gap = parseInt(cardStyles.marginRight) || 48;
+      }
+
+      return { cardWidth, gap };
+    }
+
+    function getScrollAmount() {
+      const { cardWidth, gap } = getCardWidthAndGap();
+
+      let cardsToScroll = 4;
+      const screenWidth = window.innerWidth;
+
+      if (screenWidth < 640) cardsToScroll = 1;
+      else if (screenWidth < 1024) cardsToScroll = 2;
+      else if (screenWidth > 1367) cardsToScroll = 4;
+      else cardsToScroll = 3;
+
+      return (cardWidth + gap) * cardsToScroll;
+    }
+
+    const stepSize = 10; // pixels per scroll step
+    const stepTime = 2;  // ms per step
+
+    function smoothScroll(container, distance, step, intervalTime) {
+      let scrolled = 0;
+      const direction = distance > 0 ? 1 : -1;
+      const interval = setInterval(() => {
+        container.scrollLeft += step * direction;
+        scrolled += step;
+        if (scrolled >= Math.abs(distance)) {
+          clearInterval(interval);
+          updateArrowVisibility();
+        }
+      }, intervalTime);
+    }
+
+    nextBtn.addEventListener('click', () => {
+      const scrollAmount = getScrollAmount();
+      smoothScroll(container, scrollAmount, stepSize, stepTime);
+    });
+
+    backBtn.addEventListener('click', () => {
+      const scrollAmount = getScrollAmount();
+      smoothScroll(container, -scrollAmount, stepSize, stepTime);
+    });
+
+    function updateArrowVisibility() {
+      const scrollLeft = container.scrollLeft;
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+      backBtnContainer.style.display = scrollLeft <= 0 ? 'none' : 'block';
+      nextBtnContainer.style.display = scrollLeft >= maxScrollLeft - 1 ? 'none' : 'block';
+    }
+
+    function updateButtonVisibility() {
+      if (window.innerWidth < 768) {
+        backBtnContainer.style.display = 'none';
+        nextBtnContainer.style.display = 'none';
+      } else {
+        updateArrowVisibility();
+      }
+    }
+
+    // Initial setup
+    updateButtonVisibility();
+
+    // Update on resize
+    window.addEventListener('resize', updateButtonVisibility);
+</script>
+
+</html>

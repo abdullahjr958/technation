@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="~{base :: headFragment(~{::title})}">
+
+    <th:block th:fragment="title">
+        Cart | TechNation
+    </th:block>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+<!--Navbar Injection-->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<form th:action="@{/checkout}" method="get">
+    <main class="flex-grow">
+        <div class="max-w-screen-2xl mx-auto px-4 py-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left: Cart Items Container -->
+                <div class="lg:col-span-9 min-w-0">
+                    <div class="bg-white p-4 shadow-md rounded" id="cart-items-container">
+                        <h1 style="font-size: larger" class="text-2xl font-bold border-b pb-4 mb-6">Shopping Cart</h1>
+
+                        <!-- Cart Item -->
+                        <div th:each="item, itemIndex : ${cart.cartItems}"
+                             class="flex flex-col md:flex-row items-center md:items-start gap-4 border-b pb-4 pt-4 cart-item"
+                             th:attr="data-price=${item.product.price}">
+
+                            <img th:src="@{${item.product.imageURL}}" class="w-44 h-44 object-contain"/>
+                            <div class="flex-grow">
+                                <!-- Product Name -->
+                                <h2 th:text="${#strings.substring(item.product.name, 0, 90)} + ' ....'"
+                                    style="font-size: 22px; font-weight: lighter;"></h2>
+                                <p class="text-green-600 text-sm mt-1">In Stock</p>
+
+                                <div class="flex items-center gap-4 mt-2 text-sm text-blue-600">
+                                    <div class="flex items-center border rounded px-2 py-1 w-28 justify-between">
+
+                                        <!-- Decrement Button -->
+                                        <button type="button" th:data-id="${item.id}"
+                                                class="decrement w-7 h-7 text-xl font-bold flex items-center justify-center">
+                                            -
+                                        </button>
+                                        <span class="px-2 quantity text-base"></span>
+                                        <!-- Quantity Display -->
+                                        <div class="quantity" th:id="'quantity-' + ${itemIndex.index}"
+                                             th:text="${item.quantity}">1
+                                        </div>
+                                        <span class="px-2 quantity text-base"></span>
+                                        <!-- Increment Button -->
+                                        <button type="button" th:data-id="${item.id}"
+                                                class="increment w-7 h-7 text-xl font-bold flex items-center justify-center">
+                                            +
+                                        </button>
+
+                                    </div>
+                                    <div class="flex items-center gap-2 mt-2 text-sm text-blue-600">
+                                        <span class="h-4 border-l border-gray-400"></span>
+
+                                        <button class="hover:text-blue-800 hover:underline delete-item"><a
+                                                th:href="@{'/cart-item/delete/' + ${item.id}}">Delete</a></button>
+
+                                    </div>
+                                </div>
+                                <!-- Product Price -->
+                                <div th:text="'$' + ${item.product.price}" class="text-right text-lg font-medium item-price">
+                                </div>
+                                <br>
+                                <!-- Product Added On -->
+                                <div th:text="'Added On: ' + ${#temporals.format(item.addedAt, 'MMMM dd, yyyy HH:mm a')}"
+                                     class="text-right text-lg font-medium item-price">15/May/2025
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right: Summary -->
+                <div class="lg:col-span-3 w-full max-w-screen-xl:w-72">
+                    <div class="sticky top-6 border rounded p-4 shadow-md">
+                        <p class="text-lg font-semibold mb-2">
+                            Subtotal (<span id="item-count">0</span> items): <span id="subtotal">$0.00</span>
+                        </p>
+                        <button type="submit" id="checkout-btn"
+                                class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 rounded-full mb-2">
+                            Proceed to checkout
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</form>
+
+<!--Footer Injection-->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</div>
+
+
+</body>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+</style>
+
+<script src="https://kit.fontawesome.com/f4157f3a9f.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://unpkg.com/heroicons@2.0.16/dist/24/outline.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+<script src="tailwind.config.js"></script>
+
+
+<script>
+
+    function updateTotals() {
+        let totalQuantity = 0;
+        let totalPrice = 0.0;
+
+        document.querySelectorAll('.cart-item').forEach((item, index) => {
+            const quantity = parseInt(document.getElementById('quantity-' + index).innerText);
+            const price = parseFloat(item.getAttribute('data-price'));
+
+            totalQuantity += quantity;
+            totalPrice += quantity * price;
+        });
+
+        document.getElementById('item-count').innerText = totalQuantity;
+        document.getElementById('subtotal').innerText = '$' + totalPrice;
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if(totalPrice <= 0){
+            checkoutBtn.disabled = true;
+        }
+        else if(totalPrice > 0){
+            checkoutBtn.disabled = false;
+        }
+    }
+
+    document.querySelectorAll('.increment').forEach((button, index) => {
+        button.addEventListener('click', () => {
+
+            const itemId = button.getAttribute('data-id');
+            const qtyDiv = document.getElementById('quantity-' + index);
+            const currentQty = parseInt(qtyDiv.innerText);
+            const newQty = currentQty + 1;
+
+            if (currentQty >= 1 && currentQty <= 9) {
+
+                fetch('/cart/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        itemId: itemId,
+                        quantity: newQty
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        qtyDiv.innerText = newQty;
+                        updateTotals();
+                    });
+            }
+        });
+    });
+
+    document.querySelectorAll('.decrement').forEach((button, index) => {
+        button.addEventListener('click', () => {
+
+            const itemId = button.getAttribute('data-id');
+            const qtyDiv = document.getElementById('quantity-' + index);
+            const currentQty = parseInt(qtyDiv.innerText);
+            const newQty = currentQty - 1;
+
+            if(currentQty >= 2 && currentQty <= 10){
+                fetch('/cart/update', {
+                method: 'POST',
+                headers: ({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    itemId: itemId,
+                    quantity: newQty
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    qtyDiv.innerText = newQty;
+                    updateTotals();
+                });
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', updateTotals);
+
+</script>
+
+</html>

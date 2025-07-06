@@ -1,0 +1,169 @@
+<div th:fragment="gaming-navbar" xmlns:th="http://www.thymeleaf.org">
+
+  <nav id="mainNavbar" class="navbar navbar-lg bg-dark-gradient font-lato fixed-top py-2.5">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+
+      <!-- Left Side: Menu Button -->
+      <button class="navbar-links border-0 md:border d-md-block px-2 py-1 bg-transparent" type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <div class="position-absolute top-12 start-50 translate-middle">
+        <a class="navbar-brand fw-bold text-white" th:href="@{/gaming/home}">
+          <img class="size-55" src="https://res.cloudinary.com/dbagnblo5/image/upload/v1751764925/TechNation_Logo_hdrskj.png" alt=""></a>
+      </div>
+
+      <!-- Hidden Search Icon (appears on scroll) -->
+      <div class="d-flex align-items-center gap-1 gap-md-3 ms-auto">
+
+        <div id="searchIcon" class="navbar-brand z-50 hidden me-2">
+          <a href="#searchInput"><button>
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
+            </svg>
+          </button></a>
+        </div>
+
+        <a class="navbar-brand d-flex align-items-center gap-2  me-2" th:href="@{/}">
+          <i class="fa-solid fa-microchip" style="color: #727777;"></i>
+          <span class="navbar-links fw-semibold d-none d-md-inline" style="font-size: 16px;">Modest</span>
+        </a>
+        <!-- Profile Dropdown -->
+        <div class="relative hidden lg:block">
+          <!-- Trigger Icon -->
+          <a th:href="@{/profile}" class="navbar-brand d-flex align-items-center gap-2 me-3">
+            <i class="fa-solid fa-user text-xl text-cyan"></i>
+            <div th:if="${authDTO.isAuthenticated == true}">
+              <span th:text="${authDTO.name}" class="fw-semibold d-none d-md-inline navbar-links" style="font-size: 16px;"></span>
+            </div>
+            <div th:if="${authDTO.isAuthenticated == false}">
+              <span class="fw-semibold d-none d-md-inline navbar-links" style="font-size: 16px;">Profile</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Right Side: Cart Toggle -->
+        <a th:href="@{/cart}">
+          <button class="navbar-toggler d-flex align-items-center gap-1 navbar-links" type="button"
+                  data-bs-toggle="offcanvas" data-bs-target="#offcanvasCartRight" aria-controls="offcanvasCartRight">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+            </svg>
+            <span class="fw-semibold d-none d-md-inline" style="font-size: 15px;">Cart</span>
+          </button>
+        </a>
+      </div>
+
+
+      <!-- Offcanvas Menu (Left Side) -->
+      <div class="offcanvas offcanvas-start bg-dark-gradient" style="max-height: 100vh;" tabindex="-1"
+           id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+          <h5 style="font-size: 22px;" class="offcanvas-title text-cyan" id="offcanvasMenuLabel">Menu</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                  aria-label="Close"></button>
+        </div>
+
+        <!-- Scrollable Offcanvas Body -->
+        <div class="offcanvas-body p-0 flex flex-col" style="height: calc(100vh - 56px);">
+          <!-- Container for sidebar content and sticky footer -->
+          <div class="flex flex-col h-full text-gray-200">
+
+            <!-- Scrollable content area -->
+            <div class="flex-1 overflow-y-auto">
+              <aside class="w-full" style="font-size: 20px;">
+                <div class="px-0 py-2 flex flex-col">
+                  <nav class="px-2 space-y-2">
+
+                    <a th:href="@{/profile}" class="flex items-center px-2 block lg:hidden sidenavbar-options">
+                      <i class="fa-regular fa-user text-cyan sidenavbar-icons" style="font-size: 1.1rem;"></i>
+                      <div th:if="${authDTO.isAuthenticated == true}">
+                        <span th:text="${authDTO.name}" class="ml-4"></span>
+                      </div>
+                      <div th:if="${authDTO.isAuthenticated == false}">
+                        <span class="ml-4">Profile</span>
+                      </div>
+                    </a>
+
+                    <a th:href="@{/}" class="flex items-center text-cyan p-2 sidenavbar-options">
+                      <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 12l9-9 9 9v8a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4H9v4a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                      </svg>
+                      <span>Home</span>
+                    </a>
+
+                    <!-- Products Dropdown Section -->
+                    <div x-data="{ open: false }" class="text-sm">
+                      <button @click="open = !open"
+                              class="w-full flex items-center justify-between p-2 text-cyan transition focus:outline-none">
+                        <div class="flex items-center">
+                          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                               viewBox="0 0 24 24">
+                            <path d="M20 13V6a2 2 0 00-2-2h-3V2h-6v2H6a2 2 0 00-2 2v7M5 20h14a1 1 0 001-1v-5H4v5a1 1 0 001 1z" />
+                          </svg>
+                          <span class="sidenavbar-options">Products</span>
+                        </div>
+                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 text-cyan transition-transform duration-300"
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+
+                      <div x-show="open" x-transition class="flex flex-col mt-2 ml-10 space-y-2 text-cyan sidenavbar-suboptions">
+                        <a th:href="@{/gaming/category/7}" class="hover:text-blue-400 transition">Gaming Laptop</a>
+                        <a th:href="@{/gaming/category/8}" class="py-2 hover:text-blue-400 transition">PC Components</a>
+                        <a href="#" class="py-2 hover:text-blue-400 transition">Gaming Keyboard</a>
+                        <a href="#" class="py-2 hover:text-blue-400 transition">Gaming Mouse</a>
+                        <a href="#" class="py-2 hover:text-blue-400 transition">Gaming Monitor</a>
+                        <a href="#" class="py-2 hover:text-blue-400 transition">Gaming Headset</a>
+                      </div>
+                    </div>
+
+                    <a th:href="@{/gaming/home}" class="flex items-center px-1 py-1 text-cyan sidenavbar-options">
+                      <!-- Hollow Bolt -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24"
+                           stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      <span class="px-0">Gaming</span>
+                    </a>
+
+                    <a href="#" class="flex items-center px-2 py-1 text-cyan sidenavbar-options">
+                      <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M18.364 5.636a9 9 0 11-12.728 0M9 9h.01M15 15h.01M9 15h.01M15 9h.01" />
+                      </svg>
+                      <span class="px-1">About TechNation</span>
+                    </a>
+                  </nav>
+                </div>
+              </aside>
+            </div>
+
+            <!-- Footer -->
+            <div class="border-t px-4 py-3 text-sm text-cyan text-center" style="border-color: #00F0FF;">
+              © 2025 TechNation. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="searchBar">
+    <div class="shadow py-3 px-4 mt-5 sticky-top z-10 bg-dark-gradient" style="margin-top: 40px;">
+      <div class="container">
+        <form th:action="@{/search}" class="d-flex bg-dark-gradient rounded" role="search">
+          <input name="query" id="searchInput" class="form-control me-2 bg-transparent text-white placeholder-green-400 border-1"
+                 style="border-color: #00FF99;" type="search" placeholder="Search products..." aria-label="Search">
+          <button class="btn btn-outline-success text-green-400" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

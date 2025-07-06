@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="~{base :: headFragment(~{::title})}">
+
+    <th:block th:fragment="title">
+        Profile | TechNation
+    </th:block>
+
+</head>
+
+<body class="bg-gray-50 font-roboto text-charcoal">
+
+<!--Navbar Injection-->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mx-auto px-4 py-8 md:py-12">
+    <div class="flex flex-col md:flex-row gap-6 md:gap-10">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-white rounded-lg shadow-sm p-6 animate-fade-in">
+            <h2 class="font-customSans text-xl font-semibold text-charcoal-dark border-b pb-4 mb-4">My Account</h2>
+            <nav class="space-y-1">
+                <a th:href="@{/profile}" class="aside-link active">
+                    Profile
+                </a>
+                <a th:href="@{/cart}" class="aside-link">
+                    Cart
+                </a>
+                <a href="#orders" class="aside-link">
+                    Orders
+                </a>
+                <a href="#wishlist" class="aside-link">
+                    Wishlist
+                </a>
+                <a th:href="@{/logout}" class="aside-link">
+                    Sign Out
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                <h1 class="font-customSans text-2xl md:text-3xl font-bold text-charcoal-dark mb-6">My Profile</h1>
+
+                <!-- Profile Header with Avatar -->
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6 pb-6 border-b mb-8">
+                    <div th:text="${user.initials}"
+                         class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-navy to-royal-light flex items-center justify-center text-white text-3xl md:text-4xl font-bold">
+                        JD
+                    </div>
+                    <div>
+                        <h2 th:text="${user.name}"
+                            class="font-customSans text-xl md:text-2xl font-semibold text-charcoal-dark"></h2>
+                        <p th:text="'Member since: ' + ${#temporals.format(user.createdAt, 'dd MMMM, yyyy')}"
+                           class="text-charcoal-light"></p>
+                    </div>
+                </div>
+
+                <!-- Profile Information -->
+                <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                    <!-- Personal Information Section -->
+                    <section>
+                        <h3 class="font-customSans text-xl font-semibold text-charcoal-dark mb-4">Personal Information
+                        </h3>
+
+                        <div class="space-y-4">
+                            <!-- Full Name -->
+                            <div>
+                                <label class="input-label">Full Name</label>
+                                <input type="text" class="input-field" th:value="${user.name}" readonly/>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="input-label">Email Address</label>
+                                <input type="email" class="input-field" th:value="${user.email}" readonly/>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div>
+                                <label class="input-label">Phone Number</label>
+                                <input type="tel" class="input-field" th:value="${user.phoneNo}" readonly/>
+                            </div>
+
+                            <!-- Edit Button -->
+                            <div>
+                                <form th:action="@{/edit-personal-info}" method="get">
+                                    <button type="submit" class="btn-primary">
+                                        Edit Personal Information
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Address Section -->
+                    <section>
+                        <h3 class="font-customSans text-xl font-semibold text-charcoal-dark mb-4">Address</h3>
+
+                        <div class="border rounded-lg p-4 bg-gray-50">
+
+                            <p th:each="point : ${address}" th:text="${point} + ','" class="text-charcoal mt-1"></p>
+                            <p th:text="${user.phoneNo}" class="text-charcoal mt-2"></p>
+                        </div>
+                    </section>
+
+                    <!-- Security Section -->
+                    <section class="md:col-span-2">
+
+                        <form th:action="@{/change-password}" id="password-form" method="post">
+                            <div class="border rounded-lg p-6 bg-gray-50">
+                                <div>
+
+                                    <div class="toggle-div">
+                                        <p style="font-size: large;">Change Password</p>
+                                        <button id="toggle-btn" type="button"><i class="fas fa-circle-chevron-down"
+                                                                                 style="font-size: 25px; color: #18314F;"></i>
+                                        </button>
+                                    </div>
+
+                                    <div id="div2">
+
+                                        <div>
+                                            <p id="pass-success"></p>
+                                            <label class="pt-10 input-label">Current Password</label>
+                                            <input id="old" type="password" class="px-2 input-field"
+                                                   placeholder="Enter Current Password"/>
+                                        </div>
+                                        <p id="pass-message"></p>
+
+
+                                        <label class="px-3 input-label" style=" padding-top: 4%;">New
+                                            Password</label>
+                                        <div style="display: flex;">
+                                            <input id="new1" type="password" class="mr-5 input-field"
+                                                   placeholder="Enter New Password"/>
+                                            <input id="new2" type="password" class="ml-5 input-field"
+                                                   placeholder="Enter New Password Again"/>
+                                        </div>
+                                        <p id="new-pass-message"></p>
+
+                                        <div class="button-div">
+                                            <button type="submit" class="px-4 mt-3 md:mt-0 btn-primary">
+                                                Change Password
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                </div>
+
+                <!-- Orders Section -->
+                <section id="orders" class="mt-12 max-w-6xl text-align mx-auto">
+
+                    <div class="border rounded-lg p-6 bg-gray-50">
+
+                        <div class="heading-div">
+                            <h2 class="heading font-customSans text-2xl text-charcoal-dark">Orders</h2>
+                            <button id="order-toggle-btn" class="order-toggle-btn mx-5">See Orders</button>
+                        </div>
+
+                        <div id="order-div">
+
+                            <p th:if="${orderItems == null or #lists.isEmpty(orderItems)}"
+                               style="text-align: center; color: gray; padding-top: 2rem; font-size: large;">No Orders yet</p>
+
+                            <div th:if="${orderItems != null and !#lists.isEmpty(orderItems)}">
+
+                                <!-- Header Row -->
+                                <div
+                                        class="hidden md:flex bg-gray-100 text-sm font-semibold text-charcoal-dark mt-4 px-3 py-3 rounded-t-lg">
+                                    <div class="head w-1/6 pr-2">Image</div>
+                                    <div class="head w-2/5 px-2 border-l border-gray-300">Name</div>
+                                    <div class="head w-1/5 px-2 border-l border-gray-300">Order ID</div>
+                                    <div class="head w-1/5 px-2 border-l border-gray-300">Ordered On</div>
+                                    <div class="head w-1/5 pl-2 border-l border-gray-300">Status</div>
+                                </div>
+
+                                <!-- Order Cards -->
+                                <div class="space-y-2" th:each="item : ${orderItems}">
+                                    <div
+                                            class="md:flex bg-white rounded-lg shadow-sm px-3 py-4 transition-transform duration-200 hover:shadow-md hover:-translate-y-1 items-center">
+
+                                        <!-- Product Image -->
+                                        <div class="w-full md:w-1/6 pr-2 flex justify-center md:justify-start">
+                                            <img th:src="@{${item.product.imageURL}}" alt="Product"
+                                                 class="mx-auto w-16 h-16 object-cover rounded-md shadow-sm">
+                                        </div>
+
+                                        <!-- Product Name -->
+                                        <div
+                                                class="w-full md:w-2/5 px-2 border-t md:border-t-0 md:border-l border-gray-300 mt-3 md:mt-0">
+                                            <p th:text="${#strings.substring(item.product.name, 0, 70)} + ' ....'"
+                                               class="text-sm font-medium text-charcoal-dark text-center md:text-left">
+                                            </p>
+                                        </div>
+
+                                        <!-- Order ID -->
+                                        <div
+                                                class="w-full md:w-1/5 px-2 border-t md:border-t-0 md:border-l border-gray-300 text-center mt-3 md:mt-0">
+                                            <p th:text="${item.order.orderNo}" class="text-sm text-charcoal-light"></p>
+                                        </div>
+
+                                        <!-- Ordered On -->
+                                        <div th:text="${#temporals.format(item.order.orderedOn, 'MMMM dd, yyyy HH:mm a')}"
+                                             class="w-full md:w-1/5 px-2 border-t md:border-t-0 md:border-l border-gray-300 text-center mt-3 md:mt-0">
+                                            <p class="text-sm text-charcoal-light"></p>
+                                        </div>
+
+                                        <!-- Status -->
+                                        <div
+                                                class="w-full md:w-1/5 pl-2 border-t md:border-t-0 md:border-l border-gray-300 text-center mt-3 md:mt-0">
+                                <span
+                                        class="inline-block bg-green-600 text-white text-xs font-medium px-3 py-1 rounded-full">
+                                    Delivered
+                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+                <!-- Wishlist Section -->
+                <section id="wishlist" class="mt-12 max-w-6xl mx-auto">
+                    <div class="border rounded-lg p-6 bg-gray-50">
+
+                        <div class="heading-div">
+                            <h2 class="heading font-customSans text-2xl text-charcoal-dark">Wishlist</h2>
+                            <button id="wishlist-toggle-btn" class="wishlist-toggle-btn mx-5">See Wishlist</button>
+                        </div>
+
+                        <div id="wishlist-div">
+
+                            <p th:if="${wishlistItems == null or #lists.isEmpty(wishlistItems)}"
+                               style="text-align: center; color: gray; padding-top: 2rem; font-size: large;">No Items Added</p>
+
+                            <div th:if="${wishlistItems != null and !#lists.isEmpty(wishlistItems)}">
+                                <!-- Header Row -->
+                                <div
+                                        class="hidden md:flex bg-gray-100 text-sm font-semibold text-charcoal-dark mt-4 px-3 py-3 rounded-t-lg">
+                                    <div class="head w-1/6 pr-2">Image</div>
+                                    <div class="head w-2/5 px-2 border-l border-gray-300">Name</div>
+                                    <div class="head w-1/5 px-2 border-l border-gray-300">Added On</div>
+                                    <div class="head w-2/5 pl-2 border-l border-gray-300">Actions</div>
+                                </div>
+
+                                <!-- Wishlist Items -->
+                                <div th:each="item : ${wishlistItems}" class="space-y-2">
+                                    <!-- Wishlist Card -->
+                                    <div
+                                            class="md:flex bg-white rounded-lg shadow-sm px-3 py-4 transition-transform duration-200 hover:shadow-md hover:-translate-y-1 items-center">
+
+                                        <!-- Product Image -->
+                                        <div class="w-full md:w-1/6 pr-2 flex justify-center md:justify-start">
+                                            <img th:src="@{${item.product.imageURL}}" alt="Product"
+                                                 class="mx-auto w-16 h-16 object-cover rounded-md shadow-sm">
+                                        </div>
+
+                                        <!-- Product Name -->
+                                        <div
+                                                class="w-full md:w-2/5 px-2 border-t md:border-t-0 md:border-l border-gray-300 mt-3 md:mt-0">
+                                            <p th:text="${#strings.substring(item.product.name, 0, 70)} + ' ....'" class="text-sm font-medium text-charcoal-dark text-center md:text-left">
+                                            </p>
+                                        </div>
+
+                                        <!-- Added On -->
+                                        <div
+                                                class="w-full md:w-1/5 px-2 border-t md:border-t-0 md:border-l border-gray-300 text-center mt-3 md:mt-0">
+                                            <p th:text="${#temporals.format(item.addedAt, 'MMMM dd, yyyy HH:mm a')}" class="text-sm text-charcoal-light"></p>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div
+                                                class="w-full md:w-2/5 pl-2 border-t md:border-t-0 md:border-l border-gray-300 flex justify-center md:justify-end gap-2 mt-3 md:mt-0">
+                                            <a th:href="@{'/product-details/' + ${item.product.id}}" class="view-btn btn-primary text-xs">
+                                                View Details
+                                            </a>
+
+                                            <form method="post" th:action="@{'/wishlist-item/remove/' + ${item.id}}">
+                                                <button type="submit" class="remove-btn btn-outline text-xs px-4 py-2">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="fragments/alerts :: alerts"></div>
+<!-- Footer Injection-->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+
+</body>
+
+<script src="https://kit.fontawesome.com/f4157f3a9f.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://unpkg.com/heroicons@2.0.16/dist/24/outline.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+<script src="tailwind.config.js"></script>
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+    customSans: ['Arial', 'Helvetica', 'sans-serif'],
+                          'playfair': ['Playfair Display', 'serif'],
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const button = document.getElementById('toggle-btn');
+        const div2 = document.getElementById('div2');
+        const icon = button.querySelector('i'); // get the <i> inside the button
+
+        button.addEventListener('click', () => {
+            div2.classList.toggle('expanded');
+            icon.classList.toggle('rotate');
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        passwordForm = document.querySelector('form[action^="/change-password"]');
+
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                let oldPass = document.getElementById('old').value;
+                let newPass1 = document.getElementById('new1').value;
+                let newPass2 = document.getElementById('new2').value;
+
+                document.getElementById('pass-success').innerText = '';
+                document.getElementById('pass-message').innerText = '';
+                document.getElementById('new-pass-message').innerText = '';
+
+                if (newPass1.length < 6 || newPass2.length < 6) {
+                    document.getElementById('new-pass-message').innerText = 'Password must be at least 6 characters long';
+                }
+                else if (newPass1 === newPass2) {
+                    fetch('/change-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            oldPass: oldPass,
+                            newPass: newPass1
+                        })
+                    })
+                        .then(async response => {
+                            if (response.ok) {
+                            showAlert('success', 'Password Changed Successfully');
+                                oldPass = '';
+                                newPass1 = '';
+                                newPass2 = '';
+                            }
+                            else {
+                                const error = await response.json();
+                                oldPass = '';
+                                newPass1 = '';
+                                newPass2 = '';
+                                showAlert('error', error.message);
+                            }
+                        })
+                        .catch(error => {
+                            showAlert('error', 'Something went wrong. Please try again.');
+                            console.error('Error:', error);
+                        });
+                }
+                else {
+                    document.getElementById('new-pass-message').innerText = 'New Passwords does not match.';
+                }
+            });
+        }
+    });
+
+</script>
+
+<!-- Order & Wishlist Toggle JS -->
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const orderToggleBtn = document.getElementById('order-toggle-btn');
+        const orderDiv = document.getElementById('order-div');
+
+        orderToggleBtn.addEventListener('click', function () {
+            orderDiv.classList.toggle('expanded');
+
+            if (orderToggleBtn.innerText === 'Hide Orders') {
+                orderToggleBtn.innerText = 'Show Orders';
+            } else {
+                orderToggleBtn.innerText = 'Hide Orders';
+            }
+        });
+
+        const wishlistToggleBtn = document.getElementById('wishlist-toggle-btn');
+        const wishlistDiv = document.getElementById('wishlist-div');
+
+        wishlistToggleBtn.addEventListener('click', function () {
+            wishlistDiv.classList.toggle('expanded');
+
+            if (wishlistToggleBtn.innerText === 'Hide Wishlist') {
+                wishlistToggleBtn.innerText = 'Show Wishlist';
+            } else {
+                wishlistToggleBtn.innerText = 'Hide Wishlist';
+            }
+        });
+
+    });
+
+</script>
+
+<!-- Custom CSS -->
+<style>
+
+    body{
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .view-btn {
+        background: linear-gradient(135deg, #16619e 0%, #0b2d5a 100%);
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        color: whitesmoke;
+    }
+
+    .remove-btn {
+        background: linear-gradient(90deg, #c95050 10%, #cf0808 70%);
+        border-radius: 20px;
+        color: whitesmoke;
+    }
+
+    .head {
+        text-align: center;
+    }
+
+.toggle-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+}
+
+.button-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4%;
+}
+
+#pass-message, #new-pass-message {
+  font-size: small;
+  color: red;
+  padding-left: 4px;
+}
+
+#pass-success {
+  font-size: small;
+  color: green;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+#div2 {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+#div2.expanded {
+  max-height: 500px;
+}
+
+.toggle-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+#toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+  .animate-fade-in {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+          transform: translateY(10px);
+      }
+
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
+  .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background-color: white;
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease-in-out;
+      color: #333333;
+  }
+
+  .input-field:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(30, 86, 160, 0.3);
+      border-color: #1E56A0;
+  }
+
+  .input-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #222222;
+      margin-bottom: 6px;
+  }
+
+  .btn-primary {
+      background-image: linear-gradient(to right, #18314F, #405D7D);
+      color: white;
+      font-weight: 500;
+      border-radius: 8px;
+      padding: 8px 16px;
+      transition: all 0.3s ease-in-out;
+      transform: translateY(0);
+  }
+
+  .btn-primary:hover {
+      background-image: linear-gradient(to right, #0E1C2C, #18314F);
+      box-shadow: 0 4px 12px rgba(24, 49, 79, 0.2);
+      transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+      transform: translateY(0);
+  }
+
+  .btn-outline {
+      border: 1px solid #1E56A0;
+      color: #1E56A0;
+      font-weight: 500;
+      border-radius: 8px;
+      padding: 8px 16px;
+      transition: all 0.3s ease-in-out;
+  }
+
+  .btn-outline:hover {
+      background-color: #1E56A0;
+      color: white;
+  }
+
+  .aside-link {
+      display: block;
+      padding: 10px 16px;
+      border-radius: 6px;
+      color: #333333;
+      transition: background-color 0.2s ease;
+  }
+
+  .aside-link:hover {
+      background-color: #f3f4f6;
+  }
+
+  .aside-link.active {
+      background-image: linear-gradient(to right, #1E56A0, #20639B);
+      color: white;
+      font-weight: 500;
+  }
+</style>
+
+<style>
+    .view-btn {
+        background: linear-gradient(135deg, #16619e 0%, #0b2d5a 100%);
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        color: whitesmoke;
+        margin-left: 10px;
+        padding: 7px 12px;
+        text-align: center;
+    }
+
+    .remove-btn {
+        background: linear-gradient(90deg, #de4c4c 10%, #fc0a0a 70%);
+        border-radius: 20px;
+        color: whitesmoke;
+        margin-right: 4rem;
+        margin-left: 5px;
+    }
+
+    .head {
+        text-align: center;
+    }
+
+    .heading {
+        margin-left: 2rem;
+    }
+
+    .heading-div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0px 15px 0px;
+        width: 100%;
+        border-bottom: 1px solid #e0dcdc;
+    }
+
+    .order-toggle-btn,
+    .wishlist-toggle-btn {
+        background: linear-gradient(135deg, #16619e 0%, #0b2d5a 100%);
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        color: whitesmoke;
+        padding: 12px 17px;
+        font-size: medium;
+    }
+
+    #order-div,
+    #wishlist-div {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+    }
+
+    #order-div.expanded,
+    #wishlist-div.expanded {
+        max-height: max-content;
+    }
+</style>
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    navy: {
+                        DEFAULT: '#18314F',
+                        light: '#405D7D',
+                        dark: '#0E1C2C'
+                    },
+                    charcoal: {
+                        DEFAULT: '#333333',
+                        light: '#555555',
+                        dark: '#222222'
+                    },
+                    royal: {
+                        DEFAULT: '#1E56A0',
+                        light: '#3A7BD5',
+                        dark: '#0E3B7D'
+                    },
+                    teal: {
+                        DEFAULT: '#20639B',
+                        light: '#3D89C9',
+                        dark: '#174F7D'
+                    }
+                },
+                fontFamily: {
+                    'playfair': ['"Playfair Display"', 'serif'],
+                    'roboto': ['Roboto', 'sans-serif'],
+                    'merriweather': ['Merriweather', 'serif'],
+                    'lato': ['Lato', 'sans-serif']
+                }
+            }
+        }
+    }
+</script>
+
+</html>

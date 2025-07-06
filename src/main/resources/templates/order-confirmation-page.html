@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | TechNation </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Roboto:wght@300;400;500;600&display=swap"
+            rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+        customSans: ['Arial', 'Helvetica', 'sans-serif'],
+                        'playfair': ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+          }
+
+        .my {
+            color: #0e366b;
+        }
+
+        .fill-btn {
+            background-image: linear-gradient(to right, #1b5c91, #0e366b);
+        }
+        .empty-btn{
+            border: 2px solid #0e366b;
+            color: #0e366b;
+        }
+        .empty-btn:hover{
+            background-image: linear-gradient(to right, #1b5c91, #0e366b);
+            color: white;
+            transition-duration: 300ms;
+        }
+        .opacity-div{
+            background-color: #e6eefb;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50 font-roboto">
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Success Header -->
+    <div class="text-center mb-12">
+        <div style="background-color: #cfdef8;"
+             class="inline-flex items-center justify-center w-20 h-20 bg-teal-100 rounded-full mb-6">
+            <svg class="my w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h1 class="font-playfair text-4xl font-bold text-black mb-4">
+            Order Confirmed!
+        </h1>
+        <p class="text-gray-600 text-lg mb-2">
+            Thank you for your purchase
+        </p>
+        <p th:text="'Order #' + ${order.orderNo} + ' • Placed on ' + ${#temporals.format(order.orderedOn, 'EEEE, MMMM dd, yyyy')}"
+           class="text-gray-500 text-sm">
+            Order #12345 • Placed on December 15, 2024
+        </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Left Column - Order Details -->
+        <div class="space-y-8">
+            <!-- Shipping Information -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <h2 class="font-playfair text-2xl font-semibold text-black mb-6 flex items-center">
+                        <span
+                                class="bg-slate-800 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                            📦
+                        </span>
+                    Shipping Details
+                </h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Shipping To:</p>
+                        <p th:text="${order.name}" class="text-black font-medium">John Doe</p>
+                        <p th:text="${order.address}" class="text-gray-600">123 Main Street, Apartment 4B</p>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <p class="text-gray-600 text-sm font-medium">Estimated Delivery:</p>
+                        <p th:text="${#temporals.format(order.orderedOn.plusDays(3), 'dd') + '-' + #temporals.format(order.orderedOn.plusDays(5), 'dd MMMM yyyy')}"
+                           class="text-black font-semibold">December 18-20, 2024</p>
+                        <p class="my text-sm">Standard Shipping (3-5 business days)</p>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <p class="text-gray-600 text-sm font-medium">Payment Method:</p>
+                        <p class="text-black font-medium">Cash on Delivery</p>
+                        <p class="text-gray-500 text-sm">Pay when your order arrives</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Tracking -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <h2 class="font-playfair text-2xl font-semibold text-black mb-6 flex items-center">
+                        <span
+                                class="bg-slate-800 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                            📍
+                        </span>
+                    Order Status
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-4 h-4 bg-teal-600 rounded-full" style="
+            background-image: linear-gradient(to right, #1b5c91, #0e366b);"></div>
+                        <div class="flex-1">
+                            <p class="text-black font-medium">Order Confirmed</p>
+                            <p th:text="${#temporals.format(order.orderedOn, 'MMMM dd, yyyy') + ' at ' + #temporals.format(order.orderedOn, 'HH:mm a')}"
+                               class="text-gray-500 text-sm">December 15, 2024 at 2:30 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
+                        <div class="flex-1">
+                            <p class="text-gray-600 font-medium">Processing</p>
+                            <p th:text="'Expected By ' + ${#temporals.format(order.orderedOn.plusDays(1), 'MMMM dd, yyyy')}"
+                               class="text-gray-400 text-sm">Expected by December 16, 2024</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
+                        <div class="flex-1">
+                            <p class="text-gray-600 font-medium">Shipped</p>
+                            <p th:text="'Expected By ' + ${#temporals.format(order.orderedOn.plusDays(2), 'MMMM dd, yyyy')}"
+                               class="text-gray-400 text-sm">Expected by December 17, 2024</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
+                        <div class="flex-1">
+                            <p class="text-gray-600 font-medium">Delivered</p>
+                            <p th:text="'Expected By ' + ${#temporals.format(order.orderedOn.plusDays(3), 'MMMM dd') + '-' + #temporals.format(order.orderedOn.plusDays(5), 'dd, yyyy')}"
+                               class="text-gray-400 text-sm">Expected by December 18-20, 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Order Summary -->
+        <div class="lg:sticky lg:top-8 h-fit">
+            <!-- Order Items -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <h2 class="font-customSans text-2xl font-semibold text-black mb-6 flex items-center">
+                        <span
+                                class="bg-slate-800 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                            🛍️
+                        </span>
+                    Your Order
+                </h2>
+
+                <!-- Order Items -->
+                <div class="space-y-4 mb-6">
+                    <div th:each="item : ${orderItemList}"
+                         class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <div class="flex-1">
+                            <h3 th:text="${#strings.substring(item.product.name, 0, 30)}"
+                                class="font-medium text-black">Premium Wireless Headphones</h3>
+                            <p th:text="'Qty: ' + ${item.quantity}" class="text-sm text-gray-500">Qty: 1</p>
+                        </div>
+                        <div class="text-right">
+                            <p th:text="'$' + ${item.product.price}" class="font-semibold text-black">$199.99</p>
+                        </div>
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="space-y-3 mb-8">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Items Total:</span>
+                            <p th:text="${totalPrice}">$404.96</p>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Shipping:</span>
+                            <span>$9.99</span>
+                        </div>
+                        <div class="border-t border-gray-200 pt-3">
+                            <div class="flex justify-between text-lg font-semibold text-black">
+                                <span>Total Paid:</span>
+                                <p th:text="${totalWithShippingPrice}" class="my">$414.95</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-3">
+                        <a href="#"
+                           class="fill-btn w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 block text-center">
+                            Track Your Order
+                        </a>
+
+                        <a th:href="@{/}"
+                           class="empty-btn w-full font-semibold py-4 rounded-lg transition-all duration-300 block text-center">
+                            Continue Shopping
+                        </a>
+                    </div>
+
+                    <div class="opacity-div mt-6 p-4 bg-teal-50 rounded-lg border border-teal-200">
+                        <p class="my text-sm font-medium mb-2">📧 Confirmation Sent</p>
+                        <p class="my text-sm">
+                            A confirmation email has been sent to your registered email address with all order details.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div class="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-gray-100 text-center">
+            <h3 class="font-customSans text-xl font-semibold text-black mb-4">Need Help?</h3>
+            <p class="text-gray-600 mb-6">
+                If you have any questions about your order, our customer support team is here to help.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#"
+                   class="fill-btn inline-flex items-center justify-center px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors duration-200">
+                    Contact Support
+                </a>
+                <a href="#"
+                   class="empty-btn inline-flex items-center justify-center px-6 py-3 border-2 text-gray-700 font-medium rounded-lg transition-colors duration-200">
+                    View FAQ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
