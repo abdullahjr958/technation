@@ -537,6 +537,9 @@
                           showModal(email);
                       })
                       .catch(error => {
+                          signupButton.disabled = false;
+                          spinner.classList.add('hidden');
+                          buttonText.classList.remove('invisible');
                           showAlert('error', error.message);
                       });
               }

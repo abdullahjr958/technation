@@ -32,7 +32,7 @@ public class RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<?> registerUser(UnverifiedUser unverifiedUser){
+    public ResponseEntity<Map<String, String>> registerUser(UnverifiedUser unverifiedUser){
 
         // Checks if Email already exists
         boolean emailExists = userService.getUserByEmail(unverifiedUser.getEmail());

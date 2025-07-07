@@ -63,7 +63,7 @@ public class AuthController {
     //Will be called when "Create Account" button is clicked
     @PostMapping("/auth/send-otp")
     @ResponseBody
-    public ResponseEntity<?> verifyByOTP(@RequestBody UnverifiedUser unverifiedUser){
+    public ResponseEntity<Map<String, String>> verifyByOTP(@RequestBody UnverifiedUser unverifiedUser){
         rawPassword = unverifiedUser.getPassword();
         return registrationService.registerUser(unverifiedUser);
     }
