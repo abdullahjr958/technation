@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/gaming")
 public class GamingController {
 
     private final AuthUtil authUtil;
@@ -43,14 +42,14 @@ public class GamingController {
         this.carousalImgService = carousalImgService;
     }
 
-    @GetMapping("/home")
+    @GetMapping("/gaming/home")
     public String showGamingHomePage(Model model){
         model.addAttribute("bestSellingList", productService.getGamingBestSelling());
         model.addAttribute("authDTO", authUtil.getAuthDTO());
         return "gaming-home";
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/gaming/category/{categoryId}")
     public String showGamingListingPage(@PathVariable int categoryId, Model model){
 
         Category category = categoryService.getCategoryById(categoryId);
@@ -61,7 +60,7 @@ public class GamingController {
         return "gaming-listing-page";
     }
 
-    @GetMapping("/product-details/{prodId}")
+    @GetMapping("/gaming/product-details/{prodId}")
     public String showGamingDetailsPage(@PathVariable int prodId, Model model){
 
         ProductDTO productDTO = new ProductDTO(productService.getProductById(prodId));

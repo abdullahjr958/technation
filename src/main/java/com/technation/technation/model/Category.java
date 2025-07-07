@@ -11,6 +11,7 @@ public class Category {
 
     @Id
     private int id;
+    @Column(name = "category_name")
     private String name;
     private String section;
 
