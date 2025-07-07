@@ -50,7 +50,7 @@
               <p th:text="${authDTO.name}" class="fw-semibold d-none d-md-inline hover:text-blue-200" style="font-size: 16px;"></p>
             </div>
             <div th:if="${authDTO.isAuthenticated == false}">
-              <p class="fw-semibold d-none d-md-inline hover:text-blue-200" style="font-size: 16px;">SignIn</p>
+              <p class="fw-semibold d-none d-md-inline hover:text-blue-200" style="font-size: 16px;">Sign In</p>
             </div>
 
           </a>
@@ -98,7 +98,7 @@
               <span th:text="${authDTO.name}" class="px-1"></span>
             </div>
             <div th:if="${authDTO.isAuthenticated == false}">
-              <span class="px-1">SignIn</span>
+              <span class="px-1">Sign In</span>
             </div>
               </a>
 
@@ -125,11 +125,11 @@
 
             <div style="background-color: #041c3b;" x-show="open" x-transition class="flex flex-col mt-2 ml-10 space-y-2 sidenavbar-suboptions">
               <a th:href="@{/normal/category/1}" class="hover:text-blue-400 transition">Laptop</a>
-              <a th:href="@{/normal/category/2-smart-phone}" class="py-2 hover:text-blue-400 transition">Smart Phone</a>
-              <a th:href="@{/normal/category/3-tablet}" class="py-2 hover:text-blue-400 transition">Tablet</a>
-              <a th:href="@{/normal/category/4-smart-watch}" class="py-2 hover:text-blue-400 transition">Smart Watch</a>
-              <a th:href="@{/normal/category/5-smart-tv}" class="py-2 hover:text-blue-400 transition">Samrt TV</a>
-              <a th:href="@{/normal/category/6-headphone}" class="py-2 hover:text-blue-400 transition">Earbuds & Headphone</a>
+              <a th:href="@{/normal/category/2}" class="py-2 hover:text-blue-400 transition">Smart Phone</a>
+              <a th:href="@{/normal/category/3}" class="py-2 hover:text-blue-400 transition">Tablet</a>
+              <a th:href="@{/normal/category/4}" class="py-2 hover:text-blue-400 transition">Smart Watch</a>
+              <a th:href="@{/normal/category/5}" class="py-2 hover:text-blue-400 transition">Samrt TV</a>
+              <a th:href="@{/normal/category/6}" class="py-2 hover:text-blue-400 transition">Earbuds & Headphone</a>
             </div>
           </div>
 
