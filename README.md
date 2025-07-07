@@ -95,10 +95,8 @@ mvn spring-boot:run
 💬 Have suggestions or feedback? Feel free to reach out via [email](mailto:abdullahjunior257@gmail.com).
 
 
-👤 Author
-
-Muhammad Abdullah
-
+👤 Author<br>
+Muhammad Abdullah<br>
 Software Engineering Student – Bahria University, Karachi
 
 
