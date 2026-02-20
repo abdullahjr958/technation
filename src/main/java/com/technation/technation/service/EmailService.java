@@ -31,7 +31,7 @@ public class EmailService {
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            e.printStackTrace(); // or use proper logging
+            e.printStackTrace();
         }
     }
 
@@ -50,7 +50,7 @@ public class EmailService {
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            e.printStackTrace(); // or use proper logging
+            e.printStackTrace();
         }
     }
 
