@@ -59,8 +59,8 @@ public class CheckoutController {
 
     @GetMapping("/place-order")
     public String placeOrder(@ModelAttribute ShipInfoDTO shipInfoDTO, Model model){
-
-        User currentUser = authUtil.getCurrentUser();
+        try{
+            User currentUser = authUtil.getCurrentUser();
         Cart userCart = cartService.getCartForUser(currentUser);
 
         List<CartItem> cartItemList = userCart.getCartItems();
@@ -80,5 +80,10 @@ public class CheckoutController {
         model.addAttribute("totalWithShippingPrice", totalOrderAmount+9.99);
 
         return "order-confirmation-page";
+        }
+        catch(Exception e){
+            System.out.println(e.message);
+            return "Some error occurred. Please try later.";
+        }
     }
 }
